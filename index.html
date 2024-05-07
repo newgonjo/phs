@@ -1,0 +1,69 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BB84 Protocol Simulation</title>
+</head>
+<body>
+    <h1>BB84 Protocol Simulation</h1>
+    <label for="bitLength">Bit Length:</label>
+    <input type="number" id="bitLength" value="8">
+    <button onclick="simulate()">Simulate</button>
+    <div id="aliceOutput"></div>
+    <div id="bobOutput"></div>
+
+    <script>
+        function generateRandomBits(length) {
+            let bits = [];
+            for (let i = 0; i < length; i++) {
+                bits.push(Math.random() < 0.5 ? 0 : 1);
+            }
+            return bits;
+        }
+
+        function generateRandomBases(length) {
+            let bases = [];
+            for (let i = 0; i < length; i++) {
+                bases.push(Math.random() < 0.5 ? 'X' : '+');
+            }
+            return bases;
+        }
+
+        function generateKeyFromMatchingBases(aliceBits, aliceBases, bobBases) {
+            let key = '';
+            for (let i = 0; i < aliceBits.length; i++) {
+                if (aliceBases[i] === bobBases[i]) {
+                    key += aliceBits[i];
+                }
+            }
+            return key;
+        }
+
+        function simulate() {
+            const bitLength = parseInt(document.getElementById('bitLength').value);
+
+            const aliceBits = generateRandomBits(bitLength);
+            const aliceBases = generateRandomBases(bitLength);
+            const bobBases = generateRandomBases(bitLength);
+
+            let aliceOutput = '<h2>Alice</h2><p>Bits: ' + aliceBits.join(', ') + '</p><p>Bases: ' + aliceBases.join(', ') + '</p>';
+            let bobOutput = '<h2>Bob</h2><p>Bases: ' + bobBases.join(', ') + '</p>';
+
+            const key = generateKeyFromMatchingBases(aliceBits, aliceBases, bobBases);
+            aliceOutput += '<p>Shared Key: ' + key + '</p>';
+            bobOutput += '<p>Shared Key: ' + key + '</p>';
+
+            document.getElementById('aliceOutput').innerHTML = aliceOutput;
+            document.getElementById('bobOutput').innerHTML = bobOutput;
+        }
+
+        // 실험 코드 추가
+        function runExperiment() {
+            // 여기에 실험 코드를 작성하세요
+            console.log("실험 코드가 실행되었습니다.");
+        }
+    </script>
+</body>
+</html>
