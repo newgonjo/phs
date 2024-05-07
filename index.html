@@ -1,69 +1,303 @@
-
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BB84 Protocol Simulation</title>
+    <title>모빌리티 동아리 홍보 웹사이트</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f5f5;
+            color: #333;
+            
+        }
+        
+        header {
+            background-color: #42f477;
+            color: #fff;
+            padding: 20px;
+            text-align: center;
+        }
+        
+        nav ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        
+        nav ul li {
+            display: inline;
+            margin-right: 20px;
+        }
+        
+        nav ul li a {
+            color: #fff;
+            text-decoration: none;
+        }
+        
+        main {
+            padding: 20px;
+            text-align: center;
+        }
+        
+        .slider-container {
+            width: 80%;
+            margin: 0 auto;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .slider-content {
+            display: flex;
+            transition: transform 0.5s ease;
+        }
+        
+        .section {
+            flex: 0 0 100%;
+            max-width: 100%;
+            padding: 20px;
+            box-sizing: border-box;
+            text-align: center;
+        }
+        
+        footer {
+            background-color: #333;
+            color: #fff;
+            padding: 10px;
+            text-align: center;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+        }
+        
+        .button {
+            display: inline-block;
+            background-color: #01a537;
+            color: #fff;
+            padding: 10px 20px;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+        
+        .button:hover {
+            background-color: #59e835;
+        }
+
+        /* 현재 섹션을 강조하기 위한 스타일 */
+        nav ul li.current a {
+            font-weight: bold;
+            font-size: 1.2em; /* 폰트 사이즈를 1.2배로 증가 */
+        }
+
+        /* 작은 점 4개를 나타내는 스타일 */
+        .indicator {
+            text-align: center;
+            margin-top: 10px;
+        }
+
+        .indicator span {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            background-color: #ccc;
+            border-radius: 50%;
+            margin: 0 5px;
+            transition: transform 0.3s ease; /* 애니메이션 추가 */
+        }
+
+        /* 현재 섹션에 해당하는 메뉴 항목을 더 강조하는 스타일 */
+        nav ul li.current a {
+            font-weight: bold;
+            font-size: 1.2em; /* 폰트 사이즈를 1.2배로 증가 */
+        }
+    </style>
 </head>
 <body>
-    <h1>BB84 Protocol Simulation</h1>
-    <label for="bitLength">Bit Length:</label>
-    <input type="number" id="bitLength" value="8">
-    <button onclick="simulate()">Simulate</button>
-    <div id="aliceOutput"></div>
-    <div id="bobOutput"></div>
-
+    <header>
+        <h1>BB84프로토콜</h1>
+        <nav>
+            <ul>
+                <li><a href="#about">실험</a></li>
+                <li><a href="#activities">설명</a></li>
+                <li><a href="#join">참고 자료</a></li>
+                <li><a href="#contact">제작 과정</a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <div class="slider-container">
+            <div class="slider-content">
+                <div class="section" id="about">
+                    <body>
+                        <h1>BB84 Protocol Simulation</h1>
+                        <label for="bitLength">Bit Length:</label>
+                        <input type="number" id="bitLength" value="8">
+                        <button onclick="simulate()">Simulate</button>
+                        <div id="aliceOutput"></div>
+                        <div id="bobOutput"></div>
+                    
+                        <script>
+                            function generateRandomBits(length) {
+                                let bits = [];
+                                for (let i = 0; i < length; i++) {
+                                    bits.push(Math.random() < 0.5 ? 0 : 1);
+                                }
+                                return bits;
+                            }
+                    
+                            function generateRandomBases(length) {
+                                let bases = [];
+                                for (let i = 0; i < length; i++) {
+                                    bases.push(Math.random() < 0.5 ? 'X' : '+');
+                                }
+                                return bases;
+                            }
+                    
+                            function generateKeyFromMatchingBases(aliceBits, aliceBases, bobBases) {
+                                let key = '';
+                                for (let i = 0; i < aliceBits.length; i++) {
+                                    if (aliceBases[i] === bobBases[i]) {
+                                        key += aliceBits[i];
+                                    }
+                                }
+                                return key;
+                            }
+                    
+                            function simulate() {
+                                const bitLength = parseInt(document.getElementById('bitLength').value);
+                    
+                                const aliceBits = generateRandomBits(bitLength);
+                                const aliceBases = generateRandomBases(bitLength);
+                                const bobBases = generateRandomBases(bitLength);
+                    
+                                let aliceOutput = '<h2>Alice</h2><p>Bits: ' + aliceBits.join(', ') + '</p><p>Bases: ' + aliceBases.join(', ') + '</p>';
+                                let bobOutput = '<h2>Bob</h2><p>Bases: ' + bobBases.join(', ') + '</p>';
+                    
+                                const key = generateKeyFromMatchingBases(aliceBits, aliceBases, bobBases);
+                                aliceOutput += '<p>Shared Key: ' + key + '</p>';
+                                bobOutput += '<p>Shared Key: ' + key + '</p>';
+                    
+                                document.getElementById('aliceOutput').innerHTML = aliceOutput;
+                                document.getElementById('bobOutput').innerHTML = bobOutput;
+                            }
+                    
+                            // 실험 코드 추가
+                            function runExperiment() {
+                                // 여기에 실험 코드를 작성하세요
+                                console.log("실험 코드가 실행되었습니다.");
+                            }
+                        </script>
+                    </body>
+                </div>
+                <div class="section" id="activities">
+                    <h2>설명</h2>
+                    <ul>
+                        <li>양자 비트열의 길이 입력</li>
+                        <li>양자 난수 생성기가 정해진 비트열 길이의 비트열 생성</li>
+                        <li>Alice가 기저 bases 선택</li>
+                        <li>전송</li>
+                        <li>Bob이 기저를 하나 선택</li>
+                        <li>기저가 일치하는 키 추출</li>
+                    </ul>
+                </div>
+                <div class="section" id="join">
+                    <h2>참고자료</h2>
+                    <p>웹사이트, 발표제작에 참고한 자료입니다</p>
+                    <a href="https://chatgpt.com/" class="button">chat gpt</a>
+                    <a href="https://www.youtube.com/watch?v=V3WzH2up7Os" class="button">영상자료</a>
+                    <a href="https://en.wikipedia.org/wiki/BB84" class="button">위키피디아</a>
+                </div>
+                <div class="section" id="contact">
+                    <h2>주의사항</h2>
+                    <p>기본적인 틀은 전에 만들었던 동아리 홍보 웹사이트에서 갖고왔습니다.</p>
+                    <p>  </p>
+                    <p>언어와 매체 발표시간에 자신의 진로와 연관지어 영상을 제작해온 친구에게</p>
+                    <p>영향을 받아 제작하였습니다.</p>
+                </div>
+            </div>
+        </div>
+        <!-- 작은 점 4개를 나타내는 영역 -->
+        <div class="indicator">
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+    </main>
+    <footer>
+        <p>&copy; 20716이정원 물리 발표</p>
+    </footer>
     <script>
-        function generateRandomBits(length) {
-            let bits = [];
-            for (let i = 0; i < length; i++) {
-                bits.push(Math.random() < 0.5 ? 0 : 1);
-            }
-            return bits;
-        }
-
-        function generateRandomBases(length) {
-            let bases = [];
-            for (let i = 0; i < length; i++) {
-                bases.push(Math.random() < 0.5 ? 'X' : '+');
-            }
-            return bases;
-        }
-
-        function generateKeyFromMatchingBases(aliceBits, aliceBases, bobBases) {
-            let key = '';
-            for (let i = 0; i < aliceBits.length; i++) {
-                if (aliceBases[i] === bobBases[i]) {
-                    key += aliceBits[i];
+        const sliderContent = document.querySelector('.slider-content');
+        const sections = document.querySelectorAll('.section');
+        const numSections = sections.length;
+        let currentIndex = 0;
+    
+        // 작은 점 4개를 나타내는 스팬 요소
+        const indicator = document.querySelector('.indicator');
+        const indicatorSpans = indicator.querySelectorAll('span');
+    
+        // 현재 섹션에 해당하는 구슬을 강조
+        function highlightIndicator(index) {
+            indicatorSpans.forEach((span, i) => {
+                if (i === index) {
+                    span.style.transform = 'scale(1.5)'; // 현재 섹션에 해당하는 구슬을 50% 더 크게 만듦
+                } else {
+                    span.style.transform = 'scale(1)';
                 }
+            });
+        }
+    
+        // 페이지 로드시 첫 번째 섹션 보이기
+        showSection(currentIndex);
+        highlightIndicator(currentIndex); // 페이지 로드시 첫 번째 구슬을 강조
+    
+        // 좌우 화살표를 눌렀을 때 이전 또는 다음 섹션으로 이동
+        window.addEventListener('keydown', function(event) {
+            if (event.key === 'ArrowLeft') {
+                currentIndex--;
+                showSection(currentIndex);
+                highlightIndicator(currentIndex);
+            } else if (event.key === 'ArrowRight') {
+                currentIndex++;
+                showSection(currentIndex);
+                highlightIndicator(currentIndex);
             }
-            return key;
+        });
+    
+        // 네비게이션 메뉴를 클릭했을 때 해당 섹션으로 이동
+        document.querySelectorAll('nav ul li a').forEach((link, index) => {
+            link.addEventListener('click', function(event) {
+                event.preventDefault();
+                currentIndex = index;
+                showSection(currentIndex);
+                highlightIndicator(currentIndex);
+            });
+        });
+    
+        function showSection(index) {
+            if (index < 0) {
+                currentIndex = numSections - 1;
+            } else if (index >= numSections) {
+                currentIndex = 0;
+            }
+    
+            const offset = -currentIndex * 100;
+            sliderContent.style.transform = `translateX(${offset}%)`;
+    
+            highlightCurrentNavItem(currentIndex); // 현재 섹션에 해당하는 네비게이션 메뉴 항목을 강조
         }
-
-        function simulate() {
-            const bitLength = parseInt(document.getElementById('bitLength').value);
-
-            const aliceBits = generateRandomBits(bitLength);
-            const aliceBases = generateRandomBases(bitLength);
-            const bobBases = generateRandomBases(bitLength);
-
-            let aliceOutput = '<h2>Alice</h2><p>Bits: ' + aliceBits.join(', ') + '</p><p>Bases: ' + aliceBases.join(', ') + '</p>';
-            let bobOutput = '<h2>Bob</h2><p>Bases: ' + bobBases.join(', ') + '</p>';
-
-            const key = generateKeyFromMatchingBases(aliceBits, aliceBases, bobBases);
-            aliceOutput += '<p>Shared Key: ' + key + '</p>';
-            bobOutput += '<p>Shared Key: ' + key + '</p>';
-
-            document.getElementById('aliceOutput').innerHTML = aliceOutput;
-            document.getElementById('bobOutput').innerHTML = bobOutput;
-        }
-
-        // 실험 코드 추가
-        function runExperiment() {
-            // 여기에 실험 코드를 작성하세요
-            console.log("실험 코드가 실행되었습니다.");
+    
+        // 현재 섹션에 해당하는 네비게이션 메뉴 항목을 강조
+        function highlightCurrentNavItem(index) {
+            document.querySelectorAll('nav ul li.current').forEach(item => {
+                item.classList.remove('current');
+            });
+            document.querySelectorAll('nav ul li')[index].classList.add('current');
         }
     </script>
-</body>
+
 </html>
+
